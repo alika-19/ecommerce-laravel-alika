@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <title>Beranda - Toko Online</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Ganti Bootstrap default ke Bootswatch Flatly -->
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/flatly/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('home') }}">Toko Online</a>
+        <a class="navbar-brand fw-bold" href="{{ route('home') }}">Toko Online</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-            <ul class="navbar-nav mb-2 mb-lg-0">
+            <ul class="navbar-nav mb-2 mb-lg-0 align-items-center">
                 @auth
                     @if(Auth::user()->is_admin)
                         <li class="nav-item me-2">
@@ -45,32 +46,33 @@
 
 <!-- Konten Utama -->
 <div class="container mt-5">
-    <h2 class="mb-4">Daftar Produk</h2>
+    <h2 class="mb-4 fw-bold text-primary">Daftar Produk</h2>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success shadow-sm">{{ session('success') }}</div>
     @endif
     @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
+        <div class="alert alert-danger shadow-sm">{{ session('error') }}</div>
     @endif
 
     <div class="row">
         @foreach($products as $product)
             <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
+                <div class="card h-100 shadow border-0 rounded-3">
+                    <img src="{{ asset('storage/' . $product->image) }}" 
+                         class="card-img-top rounded-top" 
+                         alt="{{ $product->name }}" 
+                         style="height: 200px; object-fit: cover;">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">{{ $product->name }}</h5>
+                        <h5 class="card-title fw-bold">{{ $product->name }}</h5>
                         <p class="card-text">Harga: <strong>Rp{{ number_format($product->price, 0, ',', '.') }}</strong></p>
 
-                        <!-- Stok -->
                         @if($product->stock > 0)
                             <p><span class="badge bg-success">Stok Tersisa: {{ $product->stock }}</span></p>
                         @else
                             <p><span class="badge bg-danger">Stok Habis</span></p>
                         @endif
 
-                        <!-- Tombol Beli -->
                         <div class="mt-auto">
                             @auth
                                 @if($product->stock > 0)

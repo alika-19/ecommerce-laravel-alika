@@ -5,8 +5,8 @@
 
 @section('content')
 <div class="container">
-    <h1>Dashboard Admin</h1>
-    <p>Selamat datang di panel admin.</p>
+    <h1>Halaman admin</h1>
+    <p>Selamat kembali rosa.</p>
     <a href="{{ route('admin.products') }}" class="btn btn-primary">kelola Produk</a>
 </div>
 @endsection
