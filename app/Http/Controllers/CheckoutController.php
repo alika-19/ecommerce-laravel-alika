@@ -16,7 +16,7 @@ class CheckoutController extends Controller
         return view('checkout.form', compact('products'));
     }
 
-   public function process(Request $request)
+  public function process(Request $request)
 {
     $total = 0;
     $items = [];
@@ -26,14 +26,13 @@ class CheckoutController extends Controller
             $product = Product::find($productId);
 
             if ($product) {
-                // Cek apakah stok cukup
                 if ($product->stock < $qty) {
                     return redirect()->back()->with('error', "Stok untuk {$product->name} tidak cukup.");
                 }
 
                 $total += $product->price * $qty;
                 $items[] = [
-                    'product' => $product, // simpan objek sekalian
+                    'product' => $product,
                     'quantity' => $qty,
                     'price' => $product->price
                 ];
@@ -58,12 +57,11 @@ class CheckoutController extends Controller
             'price' => $item['price']
         ]);
 
-        // Kurangi stok produk
         $item['product']->stock -= $item['quantity'];
         $item['product']->save();
     }
 
-    return redirect()->route('home')->with('success', 'Checkout berhasil!');
+    // Ubah redirect ke halaman sukses
+    return redirect()->route('checkout.success', $order->id);
 }
-
 }

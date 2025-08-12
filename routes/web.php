@@ -5,6 +5,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CartController;
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -12,10 +17,14 @@ use App\Http\Controllers\AdminController;
 |--------------------------------------------------------------------------
 */
 
-// Halaman utama (produk untuk user biasa)
+// ========================
+// Halaman Utama (User)
+// ========================
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
-// Auth routes
+// ========================
+// Authentication
+// ========================
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
@@ -24,17 +33,23 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pr
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Checkout-admin ngga bisa make khusus user
+// ========================
+// User: Checkout
+// ========================
 Route::middleware('auth')->group(function () {
-     Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.form');
     Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/success/{order}', [OrderController::class, 'checkoutSuccess'])->name('checkout.success');
 });
 
-// admin - buat yang di tunjuk sebagai admin yang bisa masuk
+// ========================
+// Admin Panel
+// ========================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    // Dashboard
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    // crud produk
+    // CRUD Produk
     Route::get('/products', [AdminController::class, 'products'])->name('products');
     Route::get('/products/create', [AdminController::class, 'create'])->name('products.create');
     Route::post('/products', [AdminController::class, 'store'])->name('products.store');
